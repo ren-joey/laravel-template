@@ -138,8 +138,11 @@ cd ..
 php artisan serve
 ```
 
-> 相關文章 - 網站製作學習誌<br>
-> [https://jaceju.net/integrate-vue-cli-into-laravel/](https://jaceju.net/integrate-vue-cli-into-laravel/)
+> **相關文章**<br>
+> 網站製作學習誌<br>
+> [https://jaceju.net/integrate-vue-cli-into-laravel/](https://jaceju.net/integrate-vue-cli-into-laravel/)<br>
+> 30天快速上手Laravel<br>
+> [https://ithelp.ithome.com.tw/users/20112515/ironman/2041](https://ithelp.ithome.com.tw/users/20112515/ironman/2041)
 
 ---
 
