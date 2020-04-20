@@ -5,7 +5,7 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
 <a href="https://nodejs.org/dist/v10.15.1/"><img src="https://img.shields.io/static/v1.svg?label=nodeJS&message=v10.15.1&color=blue" alt="Latest Stable Version"></a>
-<img src="https://img.shields.io/static/v1.svg?label=php&message=v7.2.5^&color=blue" alt="Latest Stable Version">
+<a><img src="https://img.shields.io/static/v1.svg?label=php&message=v7.2.5^&color=blue" alt="Latest Stable Version"></a>
 </p>
 
 ## 安裝 Composer
