@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,7 +18,19 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
-Route::view('/', 'index')->where('any', '.*');
+Route::get('/api/{action?}', function($action = null) {
+    if (!isset($action)) return redirect(('/'));
+    else {
+        header('Content-Type: application/json; charset=utf-8');
+        return json_encode([
+            'action' => $action,
+            'name' => Config::get('app.name'),
+            'time' => date("Y-m-d H:i:s")
+        ]);
+    }
+});
+
+Route::view('/{any}', 'index')->where('any', '.*');
 
 // Route::get('/south/{id?}', function ($id = null) {
 //     if (!isset($id)) return redirect('/');
