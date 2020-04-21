@@ -1,11 +1,10 @@
 <p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
 
 <p align="center">
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/static/v1.svg?label=downloads&message=89.75M&color=blue" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/static/v1.svg?label=stable&message=v7.6.2&color=blue" alt="Latest Stable Version"></a>
 <a href="https://nodejs.org/dist/v10.15.1/"><img src="https://img.shields.io/static/v1.svg?label=nodeJS&message=v10.15.1&color=blue" alt="Latest Stable Version"></a>
-<a><img src="https://img.shields.io/static/v1.svg?label=php&message=v7.2.5^&color=blue" alt="Latest Stable Version"></a>
+<a><img src="https://img.shields.io/static/v1.svg?label=php&message=v7.2.5^&color=green" alt="Latest Stable Version"></a>
 </p>
 
 ## 安裝 Composer
@@ -148,6 +147,94 @@ php artisan serve
 
 ## 目錄導覽
 
+#### root
+    /app                應用程式的核心程式碼
+    -
+    /bootstrap          啟動框架、快取資料及自動載入設定
+    /bootstrap/cache    *需確認伺服器有以上目錄的寫入權限
+    -
+    /config             配置檔案，建議熟讀其內包含的所有參數
+    -
+    /database           資料庫遷移與填充檔案
+    -
+    /public             *需要將您的網站伺服器根目錄指向 public 目錄
+    /public/index.php   網站入口
+    /public/.htaccess   * Apache 伺服器需啟用 mod_rewrite 模組
+    -
+    /resources          前端靜態資源及語言檔
+    -
+    /routes             包含此應用所有的路由定義
+    /routes/web.php
+    -
+    /storage
+
+    -
+    .env                包含應用程式金鑰等組態
+---
+
+## 參數操作
+_**.env**_<br>
+案不應該被提交到應用程式的版本控制系統，因為使用此應用程式的每個開發人員或伺服器可能需要不同的環境設定。
+```bash
+# 手動新增金鑰
+php artisan key:generate
+```
+```php
+// 取用參數
+env('APP_DEBUG');
+
+// 第二個參數為「預設值」。當給定的鍵沒有環境變數存在時就會使用該值。
+env('APP_DEBUG', false);
+
+// 判斷當前環境是否為 local 或 staging
+App::environment('local', 'staging')
+```
+
+_**/config**_<br>
+你可以在應用程式的任何位置輕鬆的使用全域的 config 輔助函式來存取你的設定值。<br>
+也可以指定預設值，當該設定選項不存在時就會回傳預設值
+```php
+// 取用參數
+config('app.timezone');
+
+// 第二個參數為「預設值」。當給定的鍵沒有環境變數存在時就會使用該值。
+config('app.timezone', 'Asia/Taipei');
+
+// 修改參數
+config(['app.timezone' => 'Asia/Taipei']);
+```
+
+---
+
+## 設定快取
+
+_**config:cache**_<br>
+所有的設定檔都會集中合併成一個檔案，讓框架可以快速載入。<br>
+每次線上部署前都應重新進行快取，以確保伺服器效能最佳化
+```bash
+php artisan config:cache
+# Configuration cache cleared!
+# Configuration cached successfully!
+```
+
+---
+
+## 維護模式
+
+當應用程式正在進行維護時，所有傳遞至應用程式的請求都應該拋出「維護中」的訊息。<br>
+維護模式回應的預設模板放置在 _**resources/views/errors/503.blade.php**_。
+
+可以透過以下指令運行維護模式：
+```bash
+# 啟用維護模式
+php artisan down
+
+# 啟用維護模式，包含 option
+php artisan down --message="Upgrading Database" --retry=60
+
+# 關閉維護模式
+php artisan up
+```
 
 ## About Laravel
 
