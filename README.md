@@ -148,33 +148,51 @@ php artisan serve
 ## 目錄導覽
 
 #### root
-    /app                應用程式的核心程式碼
-    -
-    /bootstrap          啟動框架、快取資料及自動載入設定
-    /bootstrap/cache    *需確認伺服器有以上目錄的寫入權限
-    -
-    /config             配置檔案，建議熟讀其內包含的所有參數
-    -
-    /database           資料庫遷移與填充檔案
-    -
-    /public             *需要將您的網站伺服器根目錄指向 public 目錄
-    /public/index.php   網站入口
-    /public/.htaccess   * Apache 伺服器需啟用 mod_rewrite 模組
-    -
-    /resources          前端靜態資源及語言檔
-    -
-    /routes             包含此應用所有的路由定義
-    /routes/web.php
-    -
-    /storage
-
-    -
-    .env                包含應用程式金鑰等組態
+```bash
+/app                應用程式的核心程式碼
+/app/Providers/RouteServiceProvider.php
+                    /routes/web.php, /routes/web.php 定義的路由
+                    會被指派到該檔案的 web 中介群組
+-
+/bootstrap          啟動框架、快取資料及自動載入設定
+/bootstrap/cache    結構最佳化所產生的檔案
+    # 請需確認伺服器有以上兩個目錄的寫入權限
+-
+/config             所有應用的配置檔案
+    # 建議熟讀其內包含的所有參數
+-
+/database           資料庫遷移與填充檔案
+-
+/public             HTTP請求入口
+    # 需要將您的網站伺服器根目錄指向 public 目錄
+/public/.htaccess   apache設定值覆寫設定
+    # Apache 伺服器需啟用 mod_rewrite 模組
+-
+/resources          前端靜態資源及語言檔
+-
+/routes             包含此應用所有的路由定義
+/routes/web.php     具備 Session、CSRF 防護以及 Cookie 加密功能
+                    除 RESTful API 以外，所有的路由都應定義在該檔案中
+/routes/api.php     這些路由是無狀態的，此路由進入時需要經過 token 認證
+/routes/console.php 檔案用於定義所有基於閉包的控制台指令
+-
+/storage            編譯後的 blade 模板
+/storage/logs       包含了應用程式的執行日誌
+-
+/tests              自動化測試，提供現成的範例
+    # 每一個測試類都需要新增 Test 字首
+    # 可以使用 phpunit 或者 php vendor/bin/phpunit 指令來執行測試
+    # phpUnit範例 https://phpunit.de/
+-
+/vendor             Composer 依賴套件
+-
+.env                包含應用程式金鑰等組態
+```
 ---
 
 ## 參數操作
 _**.env**_<br>
-案不應該被提交到應用程式的版本控制系統，因為使用此應用程式的每個開發人員或伺服器可能需要不同的環境設定。
+該檔案不應該被提交到應用程式的版本控制系統，因為使用此應用程式的每個開發人員或伺服器可能需要不同的環境設定。
 ```bash
 # 手動新增金鑰
 php artisan key:generate
@@ -235,6 +253,16 @@ php artisan down --message="Upgrading Database" --retry=60
 # 關閉維護模式
 php artisan up
 ```
+
+---
+
+## App 目錄
+
+> 在 app 目錄中的很多類別都可以透過 Artisan 指令產生<br />
+> 要檢視所有有效的指令，可以在終端機中執行_**php artisan list make**_ 指令。
+
+TODO:
+https://laravel.tw/docs/5.3/structure
 
 ## About Laravel
 
