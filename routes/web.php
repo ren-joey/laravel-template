@@ -18,7 +18,13 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
-Route::get('/api/{action?}', function($action = null) {
+Route::get('/hello-world', function () {
+        return 'Hello world!';
+});
+
+// TODO:
+// https://ithelp.ithome.com.tw/articles/10213865
+Route::match(['get', 'post'], '/api/{action?}', function($action = null) {
     if (!isset($action)) return redirect(('/'));
     else {
         header('Content-Type: application/json; charset=utf-8');
