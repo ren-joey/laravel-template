@@ -34,7 +34,7 @@ Route::get('/about-us/{name?}', function ($name = '未知') {
     ]);
 });
 
-Route::get('/inspire', 'InspiringController@inspire');
+Route::get('/inspire', 'InspireController@inspire');
 
 Route::match(['get', 'post'], '/api/{action?}', function($action = null) {
     if (!isset($action)) return redirect(('/'));

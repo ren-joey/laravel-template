@@ -24,7 +24,13 @@ composer --version
 ```
 
 > Composer 官方文件<br>
-> [https://getcomposer.org/download/](https://getcomposer.org/download/)
+> [https://getcomposer.org/download/](https://getcomposer.org/download/)<br>
+> <br>
+> Laravel 社群中文文檔<br>
+> [https://learnku.com/docs/laravel/7.x](https://learnku.com/docs/laravel/7.x)
+> <br>
+> 痞客邦教材<br>
+> [https://ithelp.ithome.com.tw/articles/10214524](https://ithelp.ithome.com.tw/articles/10214524)
 
 ---
 
@@ -147,7 +153,6 @@ php artisan serve
 
 ## 目錄導覽
 
-#### root
 ```bash
 /app                應用程式的核心程式碼
 /app/Providers/RouteServiceProvider.php
@@ -191,7 +196,7 @@ php artisan serve
 ---
 
 ## 參數操作
-_**.env**_<br>
+- ***.env***<br>
 該檔案不應該被提交到應用程式的版本控制系統，因為使用此應用程式的每個開發人員或伺服器可能需要不同的環境設定。
 ```bash
 # 手動新增金鑰
@@ -208,7 +213,7 @@ env('APP_DEBUG', false);
 App::environment('local', 'staging')
 ```
 
-_**/config**_<br>
+- ***/config***<br>
 你可以在應用程式的任何位置輕鬆的使用全域的 config 輔助函式來存取你的設定值。<br>
 也可以指定預設值，當該設定選項不存在時就會回傳預設值
 ```php
@@ -226,7 +231,7 @@ config(['app.timezone' => 'Asia/Taipei']);
 
 ## 設定快取
 
-_**config:cache**_<br>
+***config:cache***<br>
 所有的設定檔都會集中合併成一個檔案，讓框架可以快速載入。<br>
 每次線上部署前都應重新進行快取，以確保伺服器效能最佳化
 ```bash
@@ -240,7 +245,7 @@ php artisan config:cache
 ## 維護模式
 
 當應用程式正在進行維護時，所有傳遞至應用程式的請求都應該拋出「維護中」的訊息。<br>
-維護模式回應的預設模板放置在 _**resources/views/errors/503.blade.php**_。
+維護模式回應的預設模板放置在 ***resources/views/errors/503.blade.php***。
 
 可以透過以下指令運行維護模式：
 ```bash
@@ -259,7 +264,7 @@ php artisan up
 ## App 目錄
 
 > 在 app 目錄中的很多類別都可以透過 Artisan 指令產生<br />
-> 要檢視所有有效的指令，可以在終端機中執行_**php artisan list make**_ 指令。
+> 要檢視所有有效的指令，可以在終端機中執行***php artisan list make*** 指令。
 
 TODO:
 https://laravel.tw/docs/5.3/structure
