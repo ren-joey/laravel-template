@@ -1,4 +1,5 @@
 <?php
+// https://ithelp.ithome.com.tw/articles/10213865
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
@@ -19,11 +20,22 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::get('/hello-world', function () {
-        return 'Hello world!';
+    return view('hello-world');
 });
 
-// TODO:
-// https://ithelp.ithome.com.tw/articles/10213865
+Route::get('/about-us/{name?}', function ($name = '未知') {
+    return view('about-us', [
+        'name' => $name,
+        'records' => array(1, 2),
+        'users' => array(
+            ['id' => '0001'],
+            ['id' => '0002']
+        )
+    ]);
+});
+
+Route::get('/inspire', 'InspiringController@inspire');
+
 Route::match(['get', 'post'], '/api/{action?}', function($action = null) {
     if (!isset($action)) return redirect(('/'));
     else {
