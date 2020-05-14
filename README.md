@@ -25,12 +25,6 @@ composer --version
 
 > Composer 官方文件<br>
 > [https://getcomposer.org/download/](https://getcomposer.org/download/)<br>
-> <br>
-> Laravel 社群中文文檔<br>
-> [https://learnku.com/docs/laravel/7.x](https://learnku.com/docs/laravel/7.x)
-> <br>
-> 痞客邦教材<br>
-> [https://ithelp.ithome.com.tw/articles/10214524](https://ithelp.ithome.com.tw/articles/10214524)
 
 ---
 
@@ -64,6 +58,15 @@ laravel --version
 
 > Laravel 官方文件<br>
 > [https://laravel.com/docs/7.x/installation](https://laravel.com/docs/7.x/installation)
+> <br>
+> Laravel 社群中文文檔<br>
+> [https://learnku.com/docs/laravel/7.x](https://learnku.com/docs/laravel/7.x)
+> <br>
+> Laravel 6.0 初體驗！怎麼用最新的 laravel 架網站！<br>
+> [https://ithelp.ithome.com.tw/articles/10214524](https://ithelp.ithome.com.tw/articles/10214524)
+> <br>
+> 新手後端工程師的學習歷程(中後段有提到laravel)
+> [https://ithelp.ithome.com.tw/users/20107697/ironman/1900?page=3](https://ithelp.ithome.com.tw/users/20107697/ironman/1900?page=3)
 
 ---
 

@@ -36,6 +36,35 @@ Route::get('/about-us/{name?}', function ($name = '未知') {
 
 Route::get('/inspire', 'InspireController@inspire');
 
+Route::get('/test', function() {
+    // 瀏覽
+    $post = App\Post::all();
+
+    // 查找
+    // $post = App\Post::find(1);
+
+    // 編輯
+    // $post->content = 'Laravel demo 6.0 day 11';
+    // $post->save();
+
+    // 多筆編輯
+    // $post->each->update([
+    //     'content' => date('Y-m-d H:i:s')
+    // ]);
+
+    // 新增
+    // $post = new App\Post;
+    // $post->content = 'Laravel demo 6.0 day 11';
+    // $post->save();
+
+    // 刪除
+    // $post->delete();
+
+    // 大量刪除
+    // $posts = App\Post::destroy([2, 3]);
+    return $post;
+});
+
 Route::match(['get', 'post'], '/api/{action?}', function($action = null) {
     if (!isset($action)) return redirect(('/'));
     else {
