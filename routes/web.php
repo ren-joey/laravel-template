@@ -1,5 +1,6 @@
 <?php
 // https://ithelp.ithome.com.tw/articles/10213865
+// https://ithelp.ithome.com.tw/articles/10215152
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
