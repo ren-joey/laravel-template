@@ -36,15 +36,15 @@ class PostTableSeeder extends Seeder
         ];
 
         foreach($subjects as $key => $sub) {
-            $tags = Tag::all()->toArray();
-
-            $filteredTags = array_filter($tags, function ($tag) use ($sub) {
+            $tags = Tag::all()->filter(function($tag) use ($sub) {
                 return array_search($tag['tagname'], $sub['tags']) !== false;
             });
 
-            $tags = array_map(function($tag) {
-                return $tag['id'];
-            }, $filteredTags);
+            // $tags = Tag::all();
+
+            // $filteredTags = array_filter($tags, function ($tag) use ($sub) {
+            //     return array_search($tag['tagname'], $sub['tags']) !== false;
+            // });
 
             foreach($sub['posts'] as $key => $post) {
                 $existPost = Post::where('content', '=', $post)->first();
@@ -54,11 +54,9 @@ class PostTableSeeder extends Seeder
                     $existPost = new Post;
                     $existPost->subject_id = $existSub->id;
                     $existPost->content = $post;
+                    $existPost->save();
 
-                    // FIXED:
-                    // 傳入的 tags 無法作用
-                    // 須到 xampp terminal 中執行 php artisan db:seed
-                    // $existPost->tags()->attach($tags);
+                    $existPost->tags()->attach($tags);
                 }
             }
         }
