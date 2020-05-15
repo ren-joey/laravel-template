@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateQuotesTables extends Migration
+class AddSubjectIdToPostsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,8 @@ class CreateQuotesTables extends Migration
      */
     public function up()
     {
-        Schema::create('quotes_tables', function (Blueprint $table) {
-            // $table->id();
-            $table->bigIncrements('id');
-            $table->string('content', 255);
-            $table->timestamps();
+        Schema::table('posts', function (Blueprint $table) {
+            $table->bigInteger('subject_id')->after('id')->unsigned();
         });
     }
 
@@ -28,6 +25,8 @@ class CreateQuotesTables extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('quotes_tables');
+        Schema::table('posts', function (Blueprint $table) {
+            $table->dropColumn('subject_id');
+        });
     }
 }

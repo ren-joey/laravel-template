@@ -37,9 +37,50 @@ Route::get('/about-us/{name?}', function ($name = '未知') {
 
 Route::get('/inspire', 'InspireController@inspire');
 
+Route::get('/posts', function() {
+    return App\Post::all();
+});
+
+Route::get('/tags', function() {
+    $tagnames = ['科技', 'PHP', 'IT', '後端', '財經', '社會', '交通'];
+
+    foreach($tagnames as $key => $tagname) {
+        $count = App\Tag::where('tagname', '=', $tagname)->take(1)->count();
+        if ($count === 0) {
+            $tag = new App\Tag;
+            $tag->tagname = $tagname;
+            $tag->save();
+        }
+    }
+
+    $posts = App\Post::all();
+    $tags = App\Tag::all();
+    $tags_id = array_map(function($tag) {
+        return $tag['id'];
+    }, $tags->toArray());
+    foreach($posts as $key => $post) {
+        $idx = rand(0, count($tags_id));
+
+        if (count($post->tags) === 0) {
+            $post->tags()->attach(App\Tag::find($idx));
+        }
+    }
+
+    return App\Post::find(2)->tags;
+});
+
 Route::get('/test', function() {
     // 瀏覽
-    $post = App\Post::all();
+    // $post = App\Post::all();
+    $subject = App\Subject::all();
+
+    if (count($subject) === 0) {
+        $subject = new App\Subject;
+        $subject->title = 'Laravel 6.0 初體驗！怎麼用最新的 laravel 架網站！';
+        $subject->save();
+    } else {
+        $subject = App\Subject::find(1);
+    }
 
     // 查找
     // $post = App\Post::find(1);
@@ -63,7 +104,29 @@ Route::get('/test', function() {
 
     // 大量刪除
     // $posts = App\Post::destroy([2, 3]);
-    return $post;
+    // return $post;
+
+    // $subject = new App\Subject();
+    // $subject->title = 'ithelp Laravel 6.0 初體驗！怎麼用最新的 laravel 架網站！';
+    // $subject->save();
+
+    // $subject = App\Subject::find(2);
+    $posts = $subject->posts;
+
+    if (count($posts) === 0) {
+        $post = new App\Post;
+        $post->content = '[Day 12] 實作物件之間的關聯！談 Laravel Model Relation';
+        $post->subject_id = $subject->id;
+        $post->save();
+
+        $post = new App\Post;
+        $post->content = '[Day 13] 幫文章加上標籤！聊多對多關係';
+        $post->subject_id = $subject->id;
+        $post->save();
+    }
+
+    $subject->posts;
+    return $subject;
 });
 
 Route::match(['get', 'post'], '/api/{action?}', function($action = null) {

@@ -65,8 +65,11 @@ laravel --version
 > Laravel 6.0 初體驗！怎麼用最新的 laravel 架網站！<br>
 > [https://ithelp.ithome.com.tw/articles/10214524](https://ithelp.ithome.com.tw/articles/10214524)
 > <br>
-> 新手後端工程師的學習歷程(中後段有提到laravel)
+> 新手後端工程師的學習歷程(中後段有提到laravel)<br>
 > [https://ithelp.ithome.com.tw/users/20107697/ironman/1900?page=3](https://ithelp.ithome.com.tw/users/20107697/ironman/1900?page=3)
+> <br>
+> 使用 Laravel 打造 RESTful API<br>
+> [https://www.vnewin.com/day1-laravel-restful-api-foreword/](https://www.vnewin.com/day1-laravel-restful-api-foreword/)
 
 ---
 
