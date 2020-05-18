@@ -38,7 +38,7 @@ Route::get('/about-us/{name?}', function ($name = '未知') {
 Route::get('/inspire', 'InspireController@inspire');
 
 Route::get('/posts', function() {
-    return App\Post::all();
+    return App\Post::cursor();
 });
 
 Route::get('/tags', function() {
@@ -72,7 +72,7 @@ Route::get('/tags', function() {
 Route::get('/test', function() {
     // 瀏覽
     // $post = App\Post::all();
-    $subject = App\Subject::all();
+    $subject = App\Subject::cursor();
 
     if (count($subject) === 0) {
         $subject = new App\Subject;
