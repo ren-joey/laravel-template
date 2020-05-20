@@ -69,7 +69,10 @@ laravel --version
 > [https://ithelp.ithome.com.tw/users/20107697/ironman/1900?page=3](https://ithelp.ithome.com.tw/users/20107697/ironman/1900?page=3)
 > <br>
 > 使用 Laravel 打造 RESTful API<br>
-> [https://www.vnewin.com/day1-laravel-restful-api-foreword/](https://www.vnewin.com/day1-laravel-restful-api-foreword/)
+> [https://ithelp.ithome.com.tw/users/20105865/ironman/2466?page=1](https://ithelp.ithome.com.tw/users/20105865/ironman/2466?page=1)
+> <br>
+> Laravel API 官方文件<br>
+> [https://laravel.com/api/7.x/index.html](https://laravel.com/api/7.x/index.html)
 
 ---
 

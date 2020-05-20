@@ -26,6 +26,16 @@ Route::get('vue', function() {
     return view('vue');
 });
 
+Route::get('check-login', function () {
+    return [
+        '_token' => csrf_token()
+    ];
+});
+
+Route::match(['get', 'post'], 'api', function () {
+    return [];
+});
+
 /**
  * 此宣告作法會同時宣告七個路徑
  * ---------------------------------------------------------
