@@ -12,6 +12,6 @@ module.exports = {
     // 開發階段修改 index.html 來讓 js/css 可以作用
     // 上線階段則會修改 Laravel 的樣版
     indexPath: process.env.NODE_ENV === 'production'
-        ? '../resources/views/index.blade.php'
+        ? '../resources/views/vue.blade.php'
         : 'index.html'
 }

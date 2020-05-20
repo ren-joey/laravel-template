@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
 {
@@ -25,6 +26,14 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+
+        // 須啟動排程器
+        // https://laravel.tw/docs/5.2/scheduling
+
+        // $schedule->call(function()
+        // {
+        //     Log::info('成功排程');
+        // })->everyMinute();
     }
 
     /**

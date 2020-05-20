@@ -33,6 +33,7 @@ class PostTableSeeder extends Seeder
                     $existPost = new Post;
                     $existPost->subject_id = $existSub->id;
                     $existPost->content = $post;
+                    $existPost->user_id = 1;
                     $existPost->save();
 
                     $existPost->tags()->attach($tags);
