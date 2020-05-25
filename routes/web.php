@@ -26,12 +26,6 @@ Route::get('vue', function() {
     return view('vue');
 });
 
-Route::get('check-login', function () {
-    return [
-        '_token' => csrf_token()
-    ];
-});
-
 Route::match(['get', 'post'], 'api', function () {
     return [];
 });

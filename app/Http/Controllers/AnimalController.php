@@ -9,6 +9,15 @@ use Illuminate\Support\Facades\Validator;
 
 class AnimalController extends Controller
 {
+    const validation = [
+        'type_id' => 'required',
+        'name' => 'required|max:20',
+        'birthday' => 'required|date',
+        'area' => 'required|max:255',
+        'fix' => 'required|boolean',
+        'description' => 'nullable',
+        'personality' => 'nullable'
+    ];
     /**
      * Display a listing of the resource.
      *
@@ -37,15 +46,7 @@ class AnimalController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'type_id' => 'required',
-            'name' => 'required|max:20',
-            'birthday' => 'required|date',
-            'area' => 'required|max:255',
-            'fix' => 'required|boolean',
-            'description' => 'nullable',
-            'personality' => 'nullable'
-        ]);
+        $validator = Validator::make($request->all(), $this::validation);
 
         if ($validator->fails()) {
             return $validator->errors();
@@ -90,7 +91,14 @@ class AnimalController extends Controller
      */
     public function update(Request $request, Animal $animal)
     {
-        //
+        $method = $request->method();
+        if ($method === 'PATCH') {
+            $animal->update($request->all());
+        } else if ($method === 'PUT') {
+            // $validator =
+        }
+
+        return response($animal, Response::HTTP_OK);
     }
 
     /**
