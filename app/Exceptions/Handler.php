@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Response;
 use Throwable;
@@ -56,6 +57,10 @@ class Handler extends ExceptionHandler
             return response()->json([
                 'message' => '找不到資源'
             ], Response::HTTP_NOT_FOUND);
+        } else if ($exception instanceof QueryException) {
+            return response()->json([
+                'message' => '語法錯誤'
+            ], Response::HTTP_BAD_REQUEST);
         }
         return parent::render($request, $exception);
     }

@@ -23,9 +23,43 @@ class AnimalController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        // 設定預設值
+        $maker = $request->marker ?: 1;
+        $limit = $request->limit ?: 10;
+
+        $query = Animal::query();
+
+        // 篩選欄位條件
+        if (isset($request->filters)) {
+            $filters = explode(',', $request->filters);
+            foreach($filters as $filter) {
+                list($criteria, $value) = explode(':', $filter);
+                $query->where($criteria, 'like', "%{$value}%");
+            }
+        }
+
+        //排列順序
+        if (isset($request->sort)) {
+            $sorts = explode(',', $request->sort);
+            foreach($sorts as $sort) {
+                list($criteria, $value) = explode(':', $sort);
+                if ($value === 'asc' || $value === 'desc') {
+                    $query->orderBy($criteria, $value);
+                }
+            }
+        } else {
+            $query->orderBy('id', 'asc');
+        }
+
+        // $animals = Animal::orderBy('id', 'asc')
+        //     ->where('id', '>=', $maker)
+        //     ->paginate($limit);
+
+        $animals = $query->where('id', '>=', $maker)->paginate($limit);
+
+        return response($animals, Response::HTTP_OK);
     }
 
     /**
@@ -50,14 +84,13 @@ class AnimalController extends Controller
 
         if ($validator->fails()) {
             return $validator->errors();
-        } else {
-            // Animal Model 有 create 寫好的方法，把請求的內容，用all方法轉為陣列，傳入 create 方法中。
-            $animal = Animal::create($request->all());
-
-            // 回傳 animal 產生出來的實體物件資料，第二個參數設定狀態碼，可以直接寫 201 表示創建成功的狀態螞或用下面 Response 功能
-            return response($animal, Response::HTTP_CREATED);
-            // return response()->json($animal);
         }
+        // Animal Model 有 create 寫好的方法，把請求的內容，用all方法轉為陣列，傳入 create 方法中。
+        $animal = Animal::create($request->all());
+
+        // 回傳 animal 產生出來的實體物件資料，第二個參數設定狀態碼，可以直接寫 201 表示創建成功的狀態螞或用下面 Response 功能
+        return response($animal, Response::HTTP_CREATED);
+        // return response()->json($animal);
     }
 
     /**
@@ -92,12 +125,12 @@ class AnimalController extends Controller
     public function update(Request $request, Animal $animal)
     {
         $method = $request->method();
-        if ($method === 'PATCH') {
-            $animal->update($request->all());
-        } else if ($method === 'PUT') {
-            // $validator =
+        if ($method === 'PUT') {
+            $validator = Validator::make($request->all(), $this::validation);
+            if ($validator->fails()) return $validator->errors();
         }
 
+        $animal->update($request->all());
         return response($animal, Response::HTTP_OK);
     }
 

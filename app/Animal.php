@@ -18,4 +18,8 @@ class Animal extends Model
         'description',
         'personality'
     ];
+
+    public function type() {
+        return $this->belongsTo('App\Types');
+    }
 }

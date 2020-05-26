@@ -22,6 +22,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::apiResource('animal', 'AnimalController');
 
+Route::apiResource('type', 'TypeController');
+
 Route::get('check-login', function () {
     return response([
         'is_login' => Auth::check() ? 'Y' : 'N'

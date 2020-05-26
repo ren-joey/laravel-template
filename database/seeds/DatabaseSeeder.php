@@ -14,7 +14,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             TagTableSeeder::class,
             SubjectTableSeeder::class,
-            PostTableSeeder::class
+            PostTableSeeder::class,
+            TypeTableSeeder::class
         ]);
     }
 }
