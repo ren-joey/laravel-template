@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,14 +16,4 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
-});
-
-Route::apiResource('animal', 'AnimalController');
-
-Route::apiResource('type', 'TypeController');
-
-Route::get('check-login', function () {
-    return response([
-        'is_login' => Auth::check() ? 'Y' : 'N'
-    ], Response::HTTP_OK);
 });

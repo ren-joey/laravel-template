@@ -1,6 +1,5 @@
 <?php
 
-use App\Animal;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,12 +11,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call([
-            TagTableSeeder::class,
-            SubjectTableSeeder::class,
-            PostTableSeeder::class,
-            TypeTableSeeder::class,
-            AnimalTableSeeder::class
-        ]);
+        // $this->call(UserSeeder::class);
     }
 }
