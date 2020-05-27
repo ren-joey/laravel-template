@@ -15,7 +15,7 @@ class CreateAnimalsTable extends Migration
     {
         Schema::create('animals', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedInteger('type_id')->comment('動物分類');
+            $table->bigInteger('type_id')->unsigned()->comment('動物分類');
             $table->string('name')->comment('動物暱稱');
             $table->date('birthday')->nullable()->comment('生日');
             $table->string('area')->nullable()->comment('所在地區');

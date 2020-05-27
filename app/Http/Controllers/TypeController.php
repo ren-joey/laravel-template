@@ -21,11 +21,12 @@ class TypeController extends Controller
      */
     public function index()
     {
-        // $types = Type::cursor()->each(function ($type) {
-        //     $type->animals();
-        // });
-        $types = Type::find(1);
-        $types->animals();
+        /**
+         * has('animals') 取得擁有 animals 的所有 type
+         * with('animals') fetch animals 的資料到 type 中
+         */
+        // $types = Type::has('animals')->get();
+        $types = Type::with('animals')->get();
         return response($types, Response::HTTP_OK);
     }
 
@@ -54,7 +55,7 @@ class TypeController extends Controller
 
         if (empty($request->sort)) {
             $max = Type::get()->max('sort') ?: 100;
-            $request->sort = $max + 1;
+            $request['sort'] = $max + 1;
         }
 
         $type = Type::create($request->all());

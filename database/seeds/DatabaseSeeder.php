@@ -1,5 +1,6 @@
 <?php
 
+use App\Animal;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -15,7 +16,8 @@ class DatabaseSeeder extends Seeder
             TagTableSeeder::class,
             SubjectTableSeeder::class,
             PostTableSeeder::class,
-            TypeTableSeeder::class
+            TypeTableSeeder::class,
+            AnimalTableSeeder::class
         ]);
     }
 }

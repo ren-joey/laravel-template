@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Animal;
+use App\Http\Resources\AnimalResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
@@ -57,7 +58,7 @@ class AnimalController extends Controller
         //     ->where('id', '>=', $maker)
         //     ->paginate($limit);
 
-        $animals = $query->where('id', '>=', $maker)->paginate($limit);
+        $animals = $query->where('id', '>=', $maker)->with('type')->paginate($limit);
 
         return response($animals, Response::HTTP_OK);
     }
@@ -101,7 +102,7 @@ class AnimalController extends Controller
      */
     public function show(Animal $animal)
     {
-        //
+        return response(new AnimalResource($animal), Response::HTTP_OK);
     }
 
     /**
