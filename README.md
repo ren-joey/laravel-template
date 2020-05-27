@@ -7,6 +7,12 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
 </p>
 
+> 官方文件<br>
+> [https://laravel.com/docs/7.x/passport](https://laravel.com/docs/7.x/passport)<br>
+> <br>
+> API Auth 教學<br>
+> [https://medium.com/techcompose/create-rest-api-in-laravel-with-authentication-using-passport-133a1678a876](https://medium.com/techcompose/create-rest-api-in-laravel-with-authentication-using-passport-133a1678a876)
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
