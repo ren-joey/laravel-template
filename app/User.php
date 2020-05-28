@@ -44,26 +44,26 @@ class User extends Authenticatable
     }
 
     // 將 name 的資料解密
-    public function getNameAttribute($name)
-    {
-        return decrypt($name);
-    }
+    // public function getNameAttribute($name)
+    // {
+    //     return decrypt($name);
+    // }
 
     // 將 name 的資料加密
-    public function setNameAttribute($name)
-    {
-        $this->attributes['name'] = encrypt($name);
-    }
+    // public function setNameAttribute($name)
+    // {
+    //     $this->attributes['name'] = encrypt($name);
+    // }
 
     // 將 email 的資料解密
-    public function getEmailAttribute($email)
-    {
-        return decrypt($email);
-    }
+    // public function getEmailAttribute($email)
+    // {
+    //     return decrypt($email);
+    // }
 
     // 將 email 的資料加密
-    public function setEmailAttribute($email)
-    {
-        $this->attributes['email'] = encrypt($email);
-    }
+    // public function setEmailAttribute($email)
+    // {
+    //     $this->attributes['email'] = encrypt($email);
+    // }
 }
