@@ -275,8 +275,122 @@ php artisan up
 > 在 app 目錄中的很多類別都可以透過 Artisan 指令產生<br />
 > 要檢視所有有效的指令，可以在終端機中執行***php artisan list make*** 指令。
 
-TODO:
-https://laravel.tw/docs/5.3/structure
+---
+
+## Laravel 的生命週期
+
+> Laravel 官方文件<br>
+> [https://laravel.com/docs/7.x/lifecycle](https://laravel.com/docs/7.x/lifecycle)
+
+### 第一步
+
+所有的請求發出後，Laravel 會從 ***public/index.php*** 進行接收，因此需要將 Apache 伺服器的網站根目錄導入到該路徑下，以確保程式可以被正確執行。<br>
+***index.php*** 檔案將會：
+1. 初始化 `composer autoloader`
+2. 透過 ***bootstrap/app.php*** 實例化 Laravel 應用程式
+3. Laravel 進一步實例化 `application` / [service container](https://laravel.com/docs/7.x/container)
+
+### Http / Kernels
+
+緊接著 Laravel 會針對請求的種類來啟動 Http kernel 或 console kernal。以 HTTP 請求來說，HTTP kernel 存放路徑為 ***app/Http/Kernel.php***<br>
+
+Http kernel 繼承了 `Illuminate\Foundation\Http\Kernel` class，期內定義了 `Array $bootstrappers`，該陣列將會在請求執行前優先被啟動。這些程序定義了包含錯誤處理、設定檔載入、[應用程式監控](https://laravel.com/docs/7.x/configuration#environment-configuration)及請求執行前必須要完成的任務。<br>
+
+HTTP kernal 同時定義了 HTTP Request 的中介層 ([middleware](https://laravel.com/docs/7.x/middleware))，所有請求都必須先通過該中介層的驗證，才可以被執行。中介層控制 [HTTP Session](https://laravel.com/docs/7.x/session) 的讀寫、維護模式管理、[CSRF token](https://laravel.com/docs/7.x/csrf)處理...等。
+
+簡單來說 HTTP kernel 就是概括整個後端應用的核心，用來處理所有的 `HTTP Request` 並返回 `HTTP Response`
+
+### Service Provider
+
+服務提供者 ([Service providers](https://laravel.com/docs/7.x/providers)) 是 Kernel 所引導的程序中最中最重要的項目之一，所有的服務提供者都必須註冊在 ***config/app.php*** 設定檔的 `Array providers` 中，所有的 providers 會先被執行 `register` 方法，待所有的 providers 都註冊完畢後再接著執行 `boot` 方法。<br>
+
+Service providers 負責將程式引導到框架中的各式模組，例如 `database`、`queue`、`validation` 及 `routing`等。
+
+這些 service providers 都被放置在 ***app/Providers*** 路徑中。這個資料夾中 ***AppServiceProvider.php*** 預設是空白的，您可以將各式服務的綁定寫入該檔案。
+
+### Dispatch Request
+
+當應用已經引導到所有的服務提供者並註冊後，`Request` 就會連結到 router 中，當 router 被請求時就會調用對應的 `controller` ，同時啟動對應的中介層 (middleware)
+
+---
+
+## Service Container
+
+Laravel service container class 主要用來管理類別依賴並執行依賴注入，代表該類別的資源必須透過其內部的 `__construct` 或 `setter` ...等方法來進行設置。
+
+舉例來說
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Controllers\Controller;
+use App\Repositories\UserRepository;
+use App\User;
+
+class UserController extends Controller
+{
+    /**
+     * The user repository implementation.
+     *
+     * @var UserRepository
+     */
+    protected $users;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @param  UserRepository  $users
+     * @return void
+     */
+    public function __construct(UserRepository $users)
+    {
+        $this->users = $users;
+    }
+
+    /**
+     * Show the profile for the given user.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function show($id)
+    {
+        $user = $this->users->find($id);
+
+        return view('user.profile', ['user' => $user]);
+    }
+}
+```
+從上面的例子中可以看到，`UserController` 需要依賴外部注入 `user` 才能實例化，`show` 方法也必須透過注入的 `user` 才能取得對應的資料。其中 `UserRepository` 是一個從 database 中取得，類似於 [Eloquent](https://laravel.com/docs/7.x/eloquent) ORM 的 `user` 實例化類別。總結來說，只要容器已經被注入，我們就可以很輕易地在其他實例 (implementation) 之間進行切換。同時我們也可以很輕易的製造模板(mock)或建立一個仿製的 `UserRepository` 的實例化來協助我們進行測試。
+
+> 何謂依賴注入<br>
+> [https://ithelp.ithome.com.tw/articles/10194274](https://ithelp.ithome.com.tw/articles/10194274)
+
+## 綁定 Binding
+
+### Cinding Basics
+
+幾乎所有的 service container 都會在 [service providers](https://laravel.com/docs/7.x/providers) 中進行註冊，因此接下來會示範如何在 `providers` 中使用 container。
+
+### Simple Bindings
+
+在 Service provider 中，可以透過 `$this->app` 屬性來取用 container。接著使用 `bind` 方法並傳入想要註冊的 class 或 interface 名稱進行綁定，函式會回傳該類別的實例。
+
+```php
+$this->app->bind('HelpSpot\API', function ($app) {
+    return new \HelpSpot\API($app->make('HttpClient'));
+});
+```
+
+> 如果你的 container 沒有依賴抽象類別(interface)，你將不需要直接綁定任何的 class 對象，該方法會自動鏡射到對應的物件上。
+
+# FIXME:
+看不太懂<br>
+去查了
+https://stackoverflow.com/questions/49348681/what-is-a-usage-and-purpose-of-laravels-binding<br>
+https://heera.it/laravel-repository-pattern#.VuJcVfl97cs
+讀到一半
 
 ## About Laravel
 
