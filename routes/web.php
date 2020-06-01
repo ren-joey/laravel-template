@@ -14,6 +14,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+/**
+ * 測試 binding 時使用
+ * https://stackoverflow.com/questions/49348681/what-is-a-usage-and-purpose-of-laravels-binding
+ */
+Route::get('foo', function (App\Foo $foo) {
+    return $foo->hello();
+});
+Route::get('pay', function (App\PaymentInterface $payment) {
+    return $payment->pay();
+});
+
 Auth::routes();
 
 Route::get('/', function () {

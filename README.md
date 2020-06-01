@@ -369,7 +369,7 @@ class UserController extends Controller
 
 ## 綁定 Binding
 
-### Cinding Basics
+### Binding Basics
 
 幾乎所有的 service container 都會在 [service providers](https://laravel.com/docs/7.x/providers) 中進行註冊，因此接下來會示範如何在 `providers` 中使用 container。
 
@@ -383,13 +383,17 @@ $this->app->bind('HelpSpot\API', function ($app) {
 });
 ```
 
-> 如果你的 container 沒有依賴抽象類別(interface)，你將不需要直接綁定任何的 class 對象，該方法會自動鏡射到對應的物件上。
+> 如果你的 container 沒有依賴抽象類別(interface)，你將不需要引入或綁定任何的 class 對象，service container 會自動鏡射到對應的物件上。
 
 # FIXME:
 看不太懂<br>
 去查了
 https://stackoverflow.com/questions/49348681/what-is-a-usage-and-purpose-of-laravels-binding<br>
-https://heera.it/laravel-repository-pattern#.VuJcVfl97cs
+https://heera.it/laravel-repository-pattern#.VuJcVfl97cs<br>
+中文版
+https://medium.com/mr-efacani-teatime/laravel%E5%A6%82%E4%BD%95%E5%AF%A6%E7%8F%BE%E4%BE%9D%E8%B3%B4%E6%80%A7%E6%B3%A8%E5%85%A5-d760c8e5abde<br>
+CoolKiller
+https://ithelp.ithome.com.tw/articles/10194274
 讀到一半
 
 ## About Laravel

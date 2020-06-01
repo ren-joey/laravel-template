@@ -13,7 +13,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        // $this->app->bind(\App\PaymentInterface::class, function () {
+        //     return new \App\PaypalPayment();
+        //     // return new \App\Payment();
+        // });
+
+        $this->app->bind('App\PaymentInterface', function () {
+            // return new \App\PaymentInterface($app->make('PaypalPayment'));
+            return new \App\PaypalPayment();
+        });
     }
 
     /**
