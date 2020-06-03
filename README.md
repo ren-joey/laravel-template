@@ -296,7 +296,7 @@ php artisan up
 
 Http kernel 繼承了 `Illuminate\Foundation\Http\Kernel` class，期內定義了 `Array $bootstrappers`，該陣列將會在請求執行前優先被啟動。這些程序定義了包含錯誤處理、設定檔載入、[應用程式監控](https://laravel.com/docs/7.x/configuration#environment-configuration)及請求執行前必須要完成的任務。<br>
 
-HTTP kernal 同時定義了 HTTP Request 的中介層 ([middleware](https://laravel.com/docs/7.x/middleware))，所有請求都必須先通過該中介層的驗證，才可以被執行。中介層控制 [HTTP Session](https://laravel.com/docs/7.x/session) 的讀寫、維護模式管理、[CSRF token](https://laravel.com/docs/7.x/csrf)處理...等。
+HTTP kernal 同時定義了 HTTP Request 的中介層 ([middleware](https://laravel.com/docs/7.x/middleware))，所有請求都必須先通過該中介層的驗證，才可以被執行。中介層控制 [HTTP Session](https://laravel.com/docs/7.x/session) 的讀寫、維護模式管理、[CSRF token](https://laravel.com/docs/7.x/csrf)處理...等。<br>
 
 簡單來說 HTTP kernel 就是概括整個後端應用的核心，用來處理所有的 `HTTP Request` 並返回 `HTTP Response`
 
@@ -385,6 +385,73 @@ $this->app->bind('HelpSpot\API', function ($app) {
 });
 ```
 
+實作範例
+
+建立一個初始介面
+```php
+// app/Interface.php
+
+namespace App;
+
+interface PaymentInterface
+{
+    public function pay();
+}
+```
+
+接著建立一個類別來實作該介面
+```php
+// app/PaypalPayment.php
+
+namespace App;
+
+class PaypalPayment implements PaymentInterface
+{
+    public function pay()
+    {
+        return 'pay with paypal';
+    }
+}
+```
+
+依照依賴注入(DI)及控制反轉(IoC)設計模式，如果需要使用類別(PaypalPayment)，依賴介面會是比較好的的做法，因此我們會想要在路由中直接鏡射介面來實作
+```php
+// route/web.php
+
+Route::get('paypal', function (App\PaymentInterface $payment) {
+    return $payment->pay();
+});
+```
+
+此時 paypal route 仍然無法運作，因為 Laravel 不能針對介面進行實例化，因此會需要 `綁定 (bind)` 這個動作，告訴 Laravel 如果看到對應的介面名稱，就轉導到指定的 class 身上
+```php
+// app/Providers/AppServiceProvider.php
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * Register any application services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->app->bind('App\PaymentInterface', function () {
+            return new \App\PaypalPayment();
+        });
+    }
+}
+```
+
+完成後再次呼叫 paypal route 就可以成功看到 PaypalPayment class 回傳的內容
+```html
+pay with paypal
+```
+
 > 官方文件<br>
 > [https://laravel.com/docs/7.x/container](https://laravel.com/docs/7.x/container)<br>
 > 為何需要使用 binding<br>
@@ -394,74 +461,191 @@ $this->app->bind('HelpSpot\API', function ($app) {
 > 依賴注入實作範例 CoolKiller<br>
 > [https://ithelp.ithome.com.tw/articles/10194274](https://ithelp.ithome.com.tw/articles/10194274)
 
+---
 
-## About Laravel
+## Service Providers
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### 引言
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+`Service providers` 是整個 Laravel 應用程式 `導引程序(bootstrapping)` 的中心，包含你所開發的應用程式及 Laravel 的核心服務都需要透過 `service providers` 來進行引導。<br>
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+那什麼是 `導引程序(bootstrapping)` 呢？一般來說，bootstrapping 代表註冊各種功能的行為，包括上一章提到的綁定 (bindings)、事件監聽 (event listener)、中介層 (middleware) 以及 路由 (routes)等都需要透過 `bootstrapping` 來進行註冊。<br>
 
-## Learning Laravel
+如果你打開 ***config/app.php*** ，你將會看到一個 `Array providers => []`，所有 Laravel 啟動時要載入的 service providers 都會包含在這個陣列之中。需要注意的是，當中有些項目是 `延遲提供者(deferred providers)` ，這些服務並不會在應用程式啟動的第一時間就緒，只有當該服務被啟用的時候才會進行載入。
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 如何撰寫 Service Providers
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+所有的 service providers 都繼承自 `Illuminate\Support\ServiceProvider`，且大部分的 service provider 都會包含 `register` 及 `boot` 兩個方法。在 `register` 方法中，你只能進行各種 service container 的 綁定(binding) 行為，其餘包含 event listener、routes 或其他任何功能都不應在 `register` 中進行實作。<br>
 
-## Laravel Sponsors
+Artisan CLI 提供了 provider 的自動生成指令
+```bash
+php artisan make:provider RiakServiceProvider
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+### 關於 Register Method
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
-- [Appoly](https://www.appoly.co.uk)
-- [OP.GG](https://op.gg)
-- [云软科技](http://www.yunruan.ltd/)
+在下列範例中，你隨時可以藉由 $this->app 來取得 service container。
 
-## Contributing
+```php
+namespace App\Providers;
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+use Illuminate\Support\ServiceProvider;
+use Riak\Connection;
 
-## Code of Conduct
+class RiakServiceProvider extends ServiceProvider
+{
+    /**
+     * Register any application services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->app->singleton(Connection::class, function ($app) {
+            return new Connection(config('riak'));
+        });
+    }
+}
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 關於 `bindings` 與 `singletons` 屬性
 
-## Security Vulnerabilities
+如果你的 service providers 註冊了許多 簡易綁定(simple bindings)，你可以使用 `bindings` 與 `singletons` 屬性來快速註冊這些項目，就不用每個綁定都要重寫一次 `$this->app->bind()`。
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```php
+use App\Contracts\DowntimeNotifier;
+use App\Contracts\ServerProvider;
+use App\Services\DigitalOceanServerProvider;
+use App\Services\PingdomDowntimeNotifier;
+use App\Services\ServerToolsProvider;
+use Illuminate\Support\ServiceProvider;
 
-## License
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * All of the container bindings that should be registered.
+     *
+     * @var array
+     */
+    public $bindings = [
+        // interface binding
+        ServerProvider::class => DigitalOceanServerProvider::class,
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+        // tag binding
+        'bindTestClass' => TestClass::class
+    ];
+
+    /**
+     * All of the container singletons that should be registered.
+     *
+     * @var array
+     */
+    public $singletons = [
+        // interface binding
+        DowntimeNotifier::class => PingdomDowntimeNotifier::class,
+        ServerToolsProvider::class => ServerToolsProvider::class,
+
+        // tag binding
+        'singletonTestClass' => TestClass::class
+    ];
+}
+```
+
+> bindings 與 singletons 的差別<br>
+> bindings 每次取用時都會重新實例化該物件，而 singletons 則只會實例化第一次。因此如果取用的物件需要保留先前的參數，則使用 singletons，反之如果每次取用都希望是全新的物件則用 bindings
+
+### 關於 Boot Method
+
+Boot method 可以用來註冊 [view composer](https://laravel.com/docs/7.x/views#view-composers)，boot method 只有在所有的 service providers 都註冊完成後才會被執行，這代表你可以在 boot method 中存取所有的 services。
+
+```php
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+
+class ComposerServiceProvider extends ServiceProvider
+{
+    /**
+     * Bootstrap any application services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        view()->composer('view', function () {
+            //
+        });
+    }
+}
+```
+
+### Boot method 依賴注入
+
+你可以在 boot method 中加入 type-hint，services container 將會自動注入所以需要的依賴類別
+
+```php
+public function boot(PaymentInterface $paypal)
+{
+    echo $paypal->pay();
+}
+```
+
+### 註冊 Providers
+
+所有的 service providers 都統一註冊在 ***config/app.php***。該檔案包含一個 `Array providers => []`，你可以將自己開發的 Providers 新增在該陣列中。如同前面有提到過的，該陣列預設就已經包含了一些核心的 service providers。
+
+```php
+// config/app.php
+
+'providers' => [
+    // Other Service Providers
+    App\Providers\ComposerServiceProvider::class,
+],
+```
+
+### 延遲服務 Deferred Providers
+
+假如你的 provider 只在 service container 中使用的 bindings 進行註冊，你可以選擇性地將該 provider 設定為 延遲註冊 (deferred registration)，直到該 provide 被請求時才會進行註冊。延遲載入可以減少每次服務啟動時的 providers 註冊量，藉此提升應用程式的性能。<br>
+
+如果要延遲載入 provider，須將 `\Illuminate\Contracts\Support\DeferrableProvider` 介面擴展到指定的 provider 中，並定義一個 `provides method`，`provides method` 將會回傳一個綁定完成的 service container。
+
+```php
+namespace App\Providers;
+
+use Illuminate\Contracts\Support\DeferrableProvider;
+use Illuminate\Support\ServiceProvider;
+use Riak\Connection;
+
+class RaikServiceProvider extends ServiceProvider implements DeferrableProvider
+{
+    /**
+     * Register any application services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->app->singleton(Connection::class, function ($app) {
+            return new Connection($app['config']['riak']);
+        });
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return [Connection::class];
+    }
+}
+```
+
+---
+
+## Facades
+
+### 引言
+
+Facades 提供一個靜態的介面

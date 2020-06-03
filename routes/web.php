@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Cache;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +24,25 @@ Route::get('foo', function (App\Foo $foo) {
 });
 Route::get('pay', function (App\PaymentInterface $payment) {
     return $payment->pay();
+});
+Route::get('test', function () {
+    // $bindings 中的綁定每次都返回新的類別
+    echo app('bindTestClass')->increase();
+    echo app('bindTestClass')->increase();
+    echo app('bindTestClass')->increase();
+
+    // $singletons 中綁定的物件只會實例化一次，所有參數都會一直保留
+    echo app('singletonTestClass')->increase();
+    echo app('singletonTestClass')->increase();
+    echo app('singletonTestClass')->increase();
+});
+
+/**
+ * 測試 Facades 使用
+ * https://laravel.com/docs/7.x/facades#introduction
+ */
+Route::get('cache', function() {
+    return Cache::get('key');
 });
 
 Auth::routes();

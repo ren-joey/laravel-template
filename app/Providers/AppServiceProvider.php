@@ -3,9 +3,22 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\PaymentInterface;
+use App\PaypalPayment;
+use App\TestClass;
 
 class AppServiceProvider extends ServiceProvider
 {
+    public $bindings = [
+        PaymentInterface::class => PaypalPayment::class,
+        'bindTestClass' => TestClass::class
+    ];
+
+    public $singletons = [
+        // PaymentInterface::class => PaypalPayment::class
+        'singletonTestClass' => TestClass::class
+    ];
+
     /**
      * Register any application services.
      *
@@ -18,10 +31,10 @@ class AppServiceProvider extends ServiceProvider
         //     // return new \App\Payment();
         // });
 
-        $this->app->bind('App\PaymentInterface', function () {
-            // return new \App\PaymentInterface($app->make('PaypalPayment'));
-            return new \App\PaypalPayment();
-        });
+        // $this->app->bind('App\PaymentInterface', function () {
+        //     // return new \App\PaymentInterface($app->make('PaypalPayment'));
+        //     return new \App\PaypalPayment();
+        // });
     }
 
     /**
@@ -29,8 +42,8 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(PaymentInterface $paypal)
     {
-        //
+        // echo $paypal->pay();
     }
 }
