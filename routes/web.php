@@ -25,7 +25,7 @@ Route::get('foo', function (App\Foo $foo) {
 Route::get('pay', function (App\PaymentInterface $payment) {
     return $payment->pay();
 });
-Route::get('test', function () {
+Route::get('bind', function () {
     // $bindings 中的綁定每次都返回新的類別
     echo app('bindTestClass')->increase();
     echo app('bindTestClass')->increase();
@@ -41,8 +41,8 @@ Route::get('test', function () {
  * 測試 Facades 使用
  * https://laravel.com/docs/7.x/facades#introduction
  */
-Route::get('cache', function() {
-    return Cache::get('key');
+Route::get('facade', function() {
+    // return Cache::get('key');
 });
 
 Auth::routes();

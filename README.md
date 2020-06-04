@@ -648,4 +648,12 @@ class RaikServiceProvider extends ServiceProvider implements DeferrableProvider
 
 ### 引言
 
-Facades 提供一個靜態的介面
+Facades 提供一個類別接口
+
+所有的 facades 都被定義在 `namespace Illuminate\Support\Facades`，我們可以很輕易地透過以下方法來取用這些 facades
+
+```php
+Route::get('/cache', function () {
+    return Cache::get('key');
+});
+```

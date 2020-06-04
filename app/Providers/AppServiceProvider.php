@@ -11,7 +11,7 @@ class AppServiceProvider extends ServiceProvider
 {
     public $bindings = [
         PaymentInterface::class => PaypalPayment::class,
-        'bindTestClass' => TestClass::class
+        'bindTestClass' => TestClass::class,
     ];
 
     public $singletons = [
