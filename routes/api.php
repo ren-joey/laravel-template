@@ -35,3 +35,7 @@ Route::get('check-login', function () {
         'is_login' => Auth::check() ? 'Y' : 'N'
     ], Response::HTTP_OK);
 });
+
+Route::fallback(function() {
+    // response()
+});

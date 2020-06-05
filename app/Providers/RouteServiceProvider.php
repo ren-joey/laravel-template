@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Animal;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
 
@@ -30,7 +31,14 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Route::pattern('id', '[0-9]+'); // constrained param
+
+        // Route::model('animal', Animal::class); // route explicit binding
+
+        Route::bind('animal', function ($value) {
+            return Animal::where('name', $value)->firstOrFail();
+            // return Animal::cursor()->where('name', $value);
+        });
 
         parent::boot();
     }

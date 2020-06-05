@@ -1,8 +1,11 @@
 <?php
 
+use App\Animal;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\View;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +46,59 @@ Route::get('bind', function () {
  */
 Route::get('facade', function() {
     // return Cache::get('key');
+});
+
+/**
+ * 測試 Route
+ */
+Route::get('view/3/{id?}', function ($id = 0) {
+    return $id;
+}); // app/Providers/RouteServiceProvider.php 中強制綁定 $id 的 pattern 為 [0-9]
+Route::get('view/2/{test?}', function ($test = 0) {
+    return view('test', ['test' => $test]);
+})->where(['test' => '[0-9]+']);
+Route::get('view/{test?}', function ($test = 'good') {
+    return view('test', ['test' => $test]);
+});
+Route::view('view', 'test', ['test' => 'good'])->name('test'); // 將 route 命名
+Route::get('name/{name}', function ($name) {
+    return redirect()->route($name);
+});
+// Route::get('view/{test}', function ($test) {
+//     return view('test', ['test' => $test]);
+// });
+// Route 批次共用同一個中介層(middleware)
+// 未測試
+Route::middleware(['first', 'second'])->group(function () {
+    Route::get('/', function () {
+        // Uses first & second Middleware
+    });
+
+    Route::get('user/profile', function () {
+        // Uses first & second Middleware
+    });
+});
+// 另一個 Group 方法，運用 namespace
+// 未測試
+Route::namespace('Admin')->group(function () {
+    // Controllers Within The "App\Http\Controllers\Admin" Namespace
+});
+// Subdomain Routing
+// 未成功
+Route::domain('{domain}')->group(function () {
+    Route::get('domain', function ($domain) {
+        echo $domain;
+    });
+});
+// Route Name Prefixes
+// return redirect()->route('admin.users');
+Route::name('admin.')->group(function () {
+    Route::get('users', function () {
+        echo 'users';
+    })->name('users');
+});
+Route::get('animal/{animal}', function (Animal $animal) {
+    return response($animal, Response::HTTP_OK);
 });
 
 Auth::routes();

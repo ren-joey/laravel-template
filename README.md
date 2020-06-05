@@ -657,3 +657,21 @@ Route::get('/cache', function () {
     return Cache::get('key');
 });
 ```
+
+> 官方文件<br>
+> [https://laravel.com/docs/7.x/facades](https://laravel.com/docs/7.x/facades)<br>
+> Understanding Laravel Facade<br>
+> [https://medium.com/a-young-devoloper/understanding-laravel-facades-4802025899e6](https://medium.com/a-young-devoloper/understanding-laravel-facades-4802025899e6)<br>
+
+---
+
+## Contracts
+
+### 引言
+
+---
+
+## 路由 Routing
+
+最基本的
+
