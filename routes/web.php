@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\View;
 
 /*
@@ -100,6 +101,18 @@ Route::name('admin.')->group(function () {
 Route::get('animal/{animal}', function (Animal $animal) {
     return response($animal, Response::HTTP_OK);
 });
+
+/**
+ * 測試 middleware
+ */
+// Route::middleware('check.age')->get('age', function () {
+//     $age = Request::input('age') ?: 0;
+//     return "your age is {$age}";
+// });
+Route::get('age', function () {
+    $age = Request::input('age') ?: 0;
+    return "your age is {$age}";
+})->middleware('check.age');
 
 Auth::routes();
 
