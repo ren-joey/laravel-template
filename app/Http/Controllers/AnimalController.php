@@ -152,4 +152,9 @@ class AnimalController extends Controller
         $animal->delete();
         return response($animal, Response::HTTP_NO_CONTENT);
     }
+
+    public function test()
+    {
+        return response('naming route success', Response::HTTP_OK);
+    }
 }

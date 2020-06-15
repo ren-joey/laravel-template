@@ -114,6 +114,18 @@ Route::get('age', function () {
     return "your age is {$age}";
 })->middleware('check.age');
 
+/**
+ * 測試 Controller
+ */
+Route::get('controller/{name?}', 'TestController@get');
+Route::get('folder-controller/{name?}', 'FolderController\TestController@get');
+Route::get('invoke/{name?}', 'TestController'); // 使用 __invoke 函式，不需傳入@指定即可自動取用
+
+/**
+ * 測試Request
+ */
+Route::get('query', 'TestController@query');
+
 Auth::routes();
 
 Route::get('/', function () {

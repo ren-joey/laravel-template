@@ -27,7 +27,13 @@ Route::group(['middleware' => 'auth:api'], function () {
 });
 
 // Data
-Route::apiResource('animal', 'AnimalController');
+Route::apiResource('animal', 'AnimalController')->parameters([
+    'my-animal' => 'animal' // 使用 kas 來取代 animal model 名稱
+])->names([
+    // 'animals' => 'my-animal.index' // 修改 route 名稱，沒有用
+])->only([
+    'index', 'store', 'destroy', 'update'
+]);
 Route::apiResource('type', 'TypeController');
 
 Route::get('check-login', function () {
