@@ -1,6 +1,7 @@
 <?php
 
 use App\Animal;
+use App\Http\Controllers\folderController\TestController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Cache;
@@ -120,11 +121,16 @@ Route::get('age', function () {
 Route::get('controller/{name?}', 'TestController@get');
 Route::get('folder-controller/{name?}', 'FolderController\TestController@get');
 Route::get('invoke/{name?}', 'TestController'); // 使用 __invoke 函式，不需傳入@指定即可自動取用
+Route::get('redirect', 'TestController@redirect');
 
 /**
  * 測試Request
  */
-Route::get('query', 'TestController@query');
+Route::get('query', 'TestController@query')->name('query');
+Route::get('boolean', 'TestController@boolean');
+Route::get('flash', 'TestController@flash');
+Route::get('cookie', 'TestController@cookie');
+Route::get('bag', 'TestController@bag');
 
 Auth::routes();
 
