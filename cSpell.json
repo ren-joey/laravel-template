@@ -1,5 +1,7 @@
 {
     "words": [
-        "laravel"
+        "laravel",
+        "Authenticatable",
+        "Diactoros"
     ]
 }

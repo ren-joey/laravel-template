@@ -17,8 +17,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Auth
-Route::post('login', 'Api\AuthController@login');
-Route::post('register', 'Api\AuthController@register');
+// Route::post('login', 'Api\AuthController@login');
+// Route::post('register', 'Api\AuthController@register');
+
+// https://dev.to/azibom/create-api-rest-with-laravel-7-x-passport-authentication-and-implement-refresh-token-part-1-43ja
+Route::post('login', 'UserController@login');
+Route::post('register', 'UserController@register');
+Route::get('/unauthorized', 'UserController@unauthorized');
+Route::group(['middleware' => ['CheckClientCredentials','auth:api']], function() {
+    Route::post('logout', 'UserController@logout');
+    Route::post('details', 'UserController@details');
+});
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
