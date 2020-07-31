@@ -138,6 +138,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+/**
+ * 測試FileUpload
+ */
+Route::view('/file-upload', 'upload');
+Route::post('/file-upload', 'GeneralController@store');
+Route::get('/view-uploads', 'GeneralController@viewUploads');
+
 Route::get('home', 'HomeController@index')->name('home');
 
 Route::get('vue', function() {

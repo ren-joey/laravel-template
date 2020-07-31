@@ -52,6 +52,9 @@ Route::get('check-login', function () {
     ], Response::HTTP_OK);
 });
 
+// 上傳測試
+Route::get('images', 'FileController@all');
+
 Route::fallback(function() {
     // response()
 });
