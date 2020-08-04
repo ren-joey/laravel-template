@@ -24,6 +24,7 @@
             type="file"
             name="image"
             @change="fileSelected"
+            ref="fileInput"
             filled
             dense
             rounded
@@ -52,9 +53,13 @@ export default {
   },
   methods: {
     fileSelected(e) {
-      const image = e.target.files;
-      if (image.length === 0) return;
-      [this.image] = e.target.files;
+      if (!e) return;
+      if (!e.type.match(/^(png|jpg)/)) {
+        alert('請上傳 jpg/png 檔');
+        this.$refs.fileInput.value = undefined;
+        return;
+      }
+      this.formData.image = e;
 
       // https://vuetifyjs.com/en/components/grids/
       // https://hkchen.tech/posts/2019/02/26/drag-file-in-vue-with-java.html
